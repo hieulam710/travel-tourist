@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+</head>
+<style>
+     *{
+        margin: 0;
+        padding: 0;
+        position: relative;
+    }
+    body{
+        background-image: url(/images/img2.jpg);
+        background-size:cover;
+        position: relative;
+        font-family:  Tahoma;
+    }
+    .container{
+        border: 2px solid;
+    width:380px;
+    margin:10% auto;
+    box-sizing: border-box;
+    padding:10px 0 0 35px;
+    border-radius: 20px;
+    background-color: rgba(0,0,0,0.6);
+	box-shadow: 0 0 17px rgb(25, 24, 24);
+    }
+    h1{
+    text-align: center;
+	padding-top: 10px;
+    color: orange;
+    display: block;        
+    }
+    label{
+        font-size: 15px;
+        color: rgb(255, 255, 255);
+    }
+    .fixed{
+        width: 295px;
+        height: 40px;
+        font-size: 18px;
+        outline: none;
+        border: none;
+        border-radius: 4px;
+    }
+    button{
+    border-radius: 10px;
+    margin: 0 auto;
+    background-color: orange;
+    width: 40%;
+    color: aliceblue;
+    height: 40px;
+    transition: all .4s ease-in-out;
+    display: inline;
+    }
+    .fa-solid{
+        position: relative;
+        font-size: large;
+        right: 40px;
+        
+    }
+    a{
+        color: rgb(255, 207, 118);
+    }
+    h6{
+        color: aliceblue;
+    }
+</style>
+<body onload="checkCheckbox()">
+    <div class="container">
+        <!-- <div class="login-modal"></div> -->
+        <!-- <div class="login"> -->
+            <h1>Log in</h1>
+
+            <label for="username">Username</label> <br>
+            <input id="username" class="fixed" type="text" onkeypress="entry1(event,'email')" placeholder="Username"><br>
+            <span class="errorUserName" id="errorUserName" style="display: none">Username does not exist</span> 
+
+            <label for="email"> Email </label> <br>
+            <input id="email" class="fixed" type="text" onkeypress="entry1(event,'password')" placeholder="Email"> <br>
+            <span class="errorMail" id="errorMail" style="display: none">Email không tồn tại</span>
+
+            <label for="password">Password</label> <br>
+            <input id="password" class="fixed" type="password" onkeydown="entry(event)" placeholder="Password">
+            <i id="icon" onclick="showPassword()" class="fa-solid fa-eye"></i>
+            <span class="errorPassword" id="errorPassword" style="display: none">Wrong password</span><br>
+
+            <input class="remember-me" id="remember-me" name="rememer-password" type="checkbox">
+            <label for="remember-me">Remember me</label> <br>
+
+            <span id="error" style="display: none;">Account does not exist</span>
+            <button id="button" onclick="check()">Login</button>
+            <button id="button" onclick="cancel()">Cancel</button>
+
+            <div class="okAcount">
+                <a href="">Forgot password</a> <br>
+                <h6>Do not have an account.</h6> 
+                <a href="/register.html">Register</a>
+            </div> <br><br>
+        <!-- </div> -->
+    </div>
+
+
+
+    <script>
+
+
+        // Hàm ẩn hiện mật khẩu
+        function showPassword() {
+            let password = document.getElementById("password");
+            let icon = document.getElementById("icon");
+            if (password.type == "password") {
+                password.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                password.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+        // Hàm kiểm tra các điều kiện và đăng nhập
+        function check() {
+            let username = document.getElementById("username").value;
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+            let error = document.getElementById("error");
+            // Lấy thông tin từ bộ nhớ về
+            // 1. Kiểm tra khi bộ nhớ không rỗng
+            if (localStorage.getItem("information") != null) {
+                error.setAttribute("style", "display:none");
+                let getInforUser = JSON.parse(localStorage.getItem("information"));
+                let arrEmail = [];
+                let arrUserName = [];
+                let arrPassword = [];
+                for (let i in getInforUser) {
+                    arrUserName.push(getInforUser[i].username);
+                    arrEmail.push(getInforUser[i].email);
+                    arrPassword.push(getInforUser[i].password);
+                }
+                // 1.1. Kiểm tra các điều kiện tài khoản có trên thông tin bộ nhớ
+                let errorUserName = document.getElementById("errorUserName");
+                let errorEmail = document.getElementById("errorMail");
+                let errorPassword = document.getElementById("errorPassword");
+                if (arrUserName.indexOf(username) != -1) {
+                    errorUserName.setAttribute("style", "display:none");
+                    let index = arrUserName.indexOf(username);
+                    if (arrEmail[index] == email) {
+                        errorEmail.setAttribute("style", "display:none");
+                        if (arrPassword[index] == password) {
+                            // 1.2. Khi các điều kiện thỏa mãn thì đăng nhập
+                            errorPassword.setAttribute("style", "display:none");
+                            localStorage.setItem("boolLogin", "true"); 
+                            localStorage.setItem("indexLogin", index);
+                            let checkbox = document.getElementsByName("rememer-password");
+                            if (checkbox[0].checked === true) {
+                                localStorage.setItem("checkbox", "true");
+                            } else {
+                                localStorage.setItem("checkbox", "false");
+                                document.getElementById("username").value = "";
+                                document.getElementById("email").value = "";
+                            }
+                            window.location.href = "/logged1.html"
+
+                        } else {
+                            errorPassword.setAttribute("style", "display:block;color:red");
+                        }
+                    } else {
+                        errorEmail.setAttribute("style", "display:block;color:red");
+                    }
+                } else {
+                    errorUserName.setAttribute("style", "display:block;color:red");
+                }
+            } else {
+                error.setAttribute("style", "display:block;color:red");
+            }
+        }
+        // Hàm hủy đăng nhập
+        function cancel() {
+            window.location.href = "/index.html"
+        }
+
+        function entry(event) {
+            if (event.key == "Enter") {
+                check();
+            }
+        }
+
+        function entry1(event, input) {
+            if (event.key == "Enter") {
+                let idInput = document.getElementById(input);
+                idInput.focus();
+            }
+        }
+        // Hàm kiểm tra điều kiện khi đăng nhập có nhớ mật khẩu hay không
+        function checkCheckbox() {
+            let checkbox = localStorage.getItem("checkbox");
+            let getInforUser = JSON.parse(localStorage.getItem("information"));
+            let index = Number(JSON.parse(localStorage.getItem("indexLogout")));
+            console.log(index);
+            let rememberMe = document.getElementById("remember-me");
+            if (checkbox == "true") {
+                document.getElementById("username").value = getInforUser[index].username;
+                document.getElementById("email").value = getInforUser[index].email;
+                // document.getElementById("password").value = getInforUser[index].password;
+                rememberMe.setAttribute("checked", "true");
+            } else {
+                rememberMe.removeAttribute("checked");
+            }
+        }
+    </script>
+
+
+</body>
+</html>

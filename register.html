@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        position: relative;
+    }
+    body{
+        background-image: url(/images/img2.jpg);
+        background-size:cover;
+        position: relative;
+        font-family:  Tahoma;
+    }
+    .container{
+    border: 2px solid;
+    width:380px;
+    margin:10% auto;
+    box-sizing: border-box;
+    padding:10px 0 0 35px;
+    border-radius: 20px;
+    background-color: rgba(0,0,0,0.6);
+	box-shadow: 0 0 17px rgb(25, 24, 24);
+    }
+    h1 {
+	text-align: center;
+	padding-top: 10px;
+    color: orange;
+    display: block;
+    }
+
+    label{
+        font-size: 15px;
+        color: rgb(255, 255, 255);
+    }
+    .fixed{
+        width: 295px;
+        height: 40px;
+        font-size: 18px;
+        outline: none;
+        border: none;
+        border-radius: 4px;
+    }
+    button{
+    border-radius: 10px;
+    margin: 0 auto;
+    background-color: orange;
+    width: 40%;
+    color: aliceblue;
+    height: 40px;
+    transition: all .4s ease-in-out;
+    display: inline;
+    }
+    .fa-solid{
+        position: relative;
+        font-size: large;
+        right: 40px;
+        
+    }
+    
+</style>
+<body>
+
+    <div class="container">
+        
+    
+        <!-- <div class="login"> -->
+            <h1>Welcome</h1>
+
+            <label for="username">Username</label> <br>
+            <input id="username" type="text" class="fixed" onkeypress="entry1(event,'email')" placeholder="Username" >
+            <br>
+            <span id="usernameExits" style="display:none">Username exists</span>
+            <span class="errorUserName" id="errorUserName" style="display:none; color:red">sai định dạng</span>
+
+            <label for="email"> Email </label> 
+            <br>
+            <input id="email" type="email" class="fixed" onkeypress="entry1(event,'password')" placeholder="Email" > 
+            <br>
+            <span id="emailExits" style="display:none">Email exists</span>
+            <span class="errorMail" id="errorMail" style="display:none; color:red">Email sai dinh dang</span>
+
+            <label for="password">Password</label> <br>
+            <input id="password" class="fixed" type="password" onkeypress="entry1(event,'confirmPassword')" placeholder="Password" >
+            <i id="icon" onclick="showPassword()" class="fa-solid fa-eye"></i> <br>
+            <span class="error" id="error" style="display:none;color:red"> password sai</span>
+
+            <label for="confirmPassword">Confirm password </label> 
+            <br>
+            <input id="confirmPassword" class="fixed" type="password" onkeydown="entry(event)" placeholder="Confirm Password" >
+            <i id="iconClose" onclick="showConfirmPassword()" class="fa-solid fa-eye"></i>
+            <span id="confirmError" style="display:none;color:red">mat khau khong khop</span> 
+            <br> <br>
+            <input class="ok" id="ok-rules" name="rules" type="checkbox">
+            <label for="checked">Agree to the Terms & Condition</label>
+             <br>
+            <div class="okAcount">
+            <button onclick="register()">Register</button>
+            <button onclick="cancel()">Cancel</button>
+            </div><br>
+             
+             <label for="href">You already have an account. <a style="color:rgb(253, 231, 116)" href="/login.html">Login</a></label>    <br><br>         
+        <!-- </div> -->
+    </div>
+    <script>
+
+        function checkUserName(username) {
+            let re = /^[a-zA-Z0-9\-]+$/
+            if (re.test(username)) {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        function checkMail(mail) {
+            let re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            if (re.test(mail)) {
+                return true
+            } else {
+                return false;
+            }
+        }
+
+        function register() {
+            // Kiểm tra tên đăng nhập
+            let username = document.getElementById('username');
+            let errorUserName = document.getElementById("errorUserName");
+            if (checkUserName(username.value) == false) {
+                errorUserName.setAttribute("style", "display:block; color:red");
+                username.setAttribute("style", "border: 2px solid red");
+            } else {
+                username.setAttribute("style", "border: auto");
+                errorUserName.setAttribute("style", "display:none");
+            }
+            // Kiểm tra email
+            let mail = document.getElementById("email");
+            let errorMail = document.getElementById("errorMail");
+            if (checkMail(mail.value) == false) {
+                errorMail.setAttribute("style", "display:block; color:red");
+                mail.setAttribute("style", "border: 2px solid red");
+            } else {
+                errorMail.setAttribute("style", "display:none");
+                mail.setAttribute("style", "border:auto");
+            }
+            // Kiểm tra mật khẩu
+            let pass = document.getElementById("password");
+            let errorPass = document.getElementById("error");
+            if (pass.value.length < 6 || pass.value.indexOf(" ") != -1) {
+                errorPass.setAttribute("style", "display:block;color:red");
+                pass.setAttribute("style", "border: 2px solid red");
+            } else {
+                errorPass.setAttribute("style", "display:none");
+                pass.setAttribute("style", "border:auto");
+            }
+            // Xác nhận mật khẩu và đăng nhập
+            //1. Xác nhận mật khẩu
+            let passConfirm = document.getElementById("confirmPassword");
+            let errorConfirm = document.getElementById("confirmError");
+            if (passConfirm.value != pass.value || passConfirm.value == "") {
+                errorConfirm.setAttribute("style", "display:block;color:red");
+                passConfirm.setAttribute("style", "border: 2px solid red");
+            } else {
+                errorConfirm.setAttribute("style", "display:none");
+                passConfirm.setAttribute("style", "border:auto");
+
+            }
+            //2. Kiểm tra điều kiện đăng nhập khi đúng hết
+            if (checkUserName(username.value) && checkMail(mail.value) && (pass.value.length >= 6 && pass.value.indexOf(" ") == -1) && (passConfirm.value == pass.value)) {
+                let obj = {
+                    username: username.value,
+                    email: mail.value,
+                    password: pass.value
+                }
+                // 2.1. Lấy thông tin trên bộ nhớ về
+                let getInformation = localStorage.getItem("information");
+                // 2.1.1. Khi trường thông tin trên bộ nhớ rỗng
+                if (getInformation == null) {
+                    getInformation = [];
+                    let checkbox = document.getElementsByName("rules");
+                    let okRules = document.getElementById("ok-rules");
+                    // Kiểm tra nút check 
+                    if (checkbox[0].checked != true) {
+                        okRules.setAttribute("style", "display:block;color:red");
+                    } else {
+                        okRules.setAttribute("style", "display:none");
+                        getInformation.push(obj);
+                        // Đẩy thông tin lên bộ nhớ và chuyển trang
+                        localStorage.setItem("information", JSON.stringify(getInformation));
+                        window.location.href = "/login.html";
+                        document.getElementById("username").value = "";
+                        document.getElementById("email").value = "";
+                        document.getElementById("confirmPassword").value = "";
+                        document.getElementById("password").value = "";
+                    }
+                } else {
+                    // 2.1.2. Khi bộ nhớ không rỗng
+                    getInformation = JSON.parse(getInformation);
+                    let emailExits = document.getElementById("emailExits");
+                    let usernameExits = document.getElementById("usernameExits");
+
+                    let flag1;
+                    let flag2;
+                    // Kiểm tra trùng Email hay không
+                    for (let i = 0; i < getInformation.length; i++) {
+                        if (obj.email == getInformation[i].email) {
+                            emailExits.setAttribute("style", "display:block;color:red");
+                            mail.setAttribute("style", "border: 2px solid red");
+                            flag1 = false;
+                            break;
+                        } else {
+                            emailExits.setAttribute("style", "display:none");
+                            mail.setAttribute("style", "border:auto");
+                            flag1 = true;
+                        }
+                    }
+                    // Kiểm tra trùng tên đăng nhập không
+                    for (let i = 0; i < getInformation.length; i++) {
+                        if (obj.username == getInformation[i].username) {
+                            usernameExits.setAttribute("style", "display:block;color:red");
+                            username.setAttribute("style", "border: 2px solid red");
+                            flag2 = false;
+                            break;
+                        } else {
+                            usernameExits.setAttribute("style", "display:none");
+                            username.setAttribute("style", "border:auto");
+                            flag2 = true;
+                        }
+                    }
+                    // Đẩy thông tin tài khoản mới lên bộ nhớ sau khi check điều khoản và chuyển trang
+                    if (flag1 == true && flag2 == true) {
+                        let checkbox = document.getElementsByName("rules");
+                        let okRules = document.getElementById("ok-rules");
+                        if (checkbox[0].checked != true) {
+                            okRules.setAttribute("style", "display:block;color:red");
+                        } else {
+                            okRules.setAttribute("style", "display:none");
+                            getInformation.push(obj);
+                            localStorage.setItem("information", JSON.stringify(getInformation));
+                            window.location.href = "/login.html";
+                            document.getElementById("username").value = "";
+                            document.getElementById("email").value = "";
+                            document.getElementById("confirmPassword").value = "";
+                            document.getElementById("password").value = "";
+                        }
+                    }
+                }
+            }
+        }
+
+        function showPassword() {
+            let password = document.getElementById("password");
+            let icon = document.getElementById("icon");
+            if (password.type == "password") {
+                password.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                password.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+
+        function showConfirmPassword() {
+            let showConfirmPassword = document.getElementById("confirmPassword");
+            let iconClose = document.getElementById("iconClose");
+            if (showConfirmPassword.type == "password") {
+                showConfirmPassword.type = "text";
+                iconClose.classList.remove("fa-eye");
+                iconClose.classList.add("fa-eye-slash");
+            } else {
+                showConfirmPassword.type = "password";
+                iconClose.classList.remove("fa-eye-slash");
+                iconClose.classList.add("fa-eye");
+            }
+        }
+
+        function cancel() {
+            window.location.href = "/index.html"
+        }
+
+        function entry(event) {
+            if (event.key == "Enter") {
+                register();
+            }
+        }
+
+        function entry1(event, input) {
+            if (event.key == "Enter") {
+                let idInput = document.getElementById(input);
+                idInput.focus();
+            }
+        }
+    </script>
+
+
+</body>
+</html>
